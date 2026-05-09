@@ -1,0 +1,218 @@
+openapi: 3.0.3
+
+info:
+  title: Workshop Spring Boot API
+  version: 1.0.0
+  description: API del workshop con enfoque contract-first
+
+tags:
+  - name: workshop
+  - name: simulaciones
+  - name: demo-estado
+
+paths:
+
+  /api/v1:
+    get:
+      tags:
+        - workshop
+      operationId: getWorkshopHealth
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+
+  /api/v1/saludos:
+    get:
+      tags:
+        - workshop
+      operationId: saludarPorGet
+      parameters:
+        - name: nombre
+          in: query
+          required: false
+          schema:
+            type: string
+            default: Mundo
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaludoResponse"
+
+    post:
+      tags:
+        - workshop
+      operationId: saludarPorPost
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SaludoRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SaludoResponse"
+
+  /api/v1/simulaciones/prestamo:
+    post:
+      tags:
+        - simulaciones
+      operationId: simularPrestamo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrestamoRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrestamoResponse"
+
+  /api/v1/demo/estado/singleton/{valor}:
+    post:
+      tags:
+        - demo-estado
+      operationId: actualizarSingleton
+      parameters:
+        - name: valor
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstadoResponse"
+
+  /api/v1/demo/estado/singleton:
+    get:
+      tags:
+        - demo-estado
+      operationId: obtenerSingleton
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstadoResponse"
+
+  /api/v1/demo/estado/singleton/reset:
+    post:
+      tags:
+        - demo-estado
+      operationId: reiniciarSingleton
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstadoResponse"
+
+  /api/v1/demo/estado/manual/{valor}:
+    post:
+      tags:
+        - demo-estado
+      operationId: actualizarManual
+      parameters:
+        - name: valor
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstadoResponse"
+
+  /api/v1/demo/estado/manual:
+    get:
+      tags:
+        - demo-estado
+      operationId: obtenerManual
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EstadoResponse"
+
+components:
+
+  schemas:
+
+    HealthResponse:
+      type: object
+      properties:
+        estado:
+          type: string
+        mensaje:
+          type: string
+
+    SaludoRequest:
+      type: object
+      properties:
+        nombre:
+          type: string
+      required:
+        - nombre
+
+    SaludoResponse:
+      type: object
+      properties:
+        mensaje:
+          type: string
+
+    PrestamoRequest:
+      type: object
+      properties:
+        monto:
+          type: number
+        tasaAnual:
+          type: number
+        meses:
+          type: integer
+      required:
+        - monto
+        - tasaAnual
+        - meses
+
+    PrestamoResponse:
+      type: object
+      properties:
+        cuotaMensual:
+          type: number
+        interesTotal:
+          type: number
+        totalPagar:
+          type: number
+
+    EstadoResponse:
+      type: object
+      properties:
+        tipo:
+          type: string
+        valorActual:
+          type: integer
